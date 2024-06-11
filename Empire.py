@@ -101,6 +101,7 @@ def run_empire(name, tab_file_path, data_handler_path, result_file_path, branch_
     model.Node = Set(ordered=True) #n
     # model.Node = Set(within=model.Node, ordered=True)
     model.DirectionalLink = Set(dimen=2, within=model.Node*model.Node, ordered=True) #a
+    model.HydrogenBidirectionalLink = Set(dimen=2, within=model.Node*model.Node, ordered=True) #a
     model.TransmissionType = Set(ordered=True)
     
     #model.NaturalGasNode = Set(within=model.Node, ordered=True) #n  
@@ -145,6 +146,7 @@ def run_empire(name, tab_file_path, data_handler_path, result_file_path, branch_
     data.load(filename=tab_file_path + "/" + 'Sets_GeneratorsOfTechnology.tab',format="set", set=model.GeneratorsOfTechnology)
     data.load(filename=tab_file_path + "/" + 'Sets_GeneratorsOfNode.tab',format="set", set=model.GeneratorsOfNode)
     data.load(filename=tab_file_path + "/" + 'Sets_StorageOfNodes.tab',format="set", set=model.StoragesOfNode)
+    data.load(filename=tab_file_path + "/" + 'Sets_HydrogenLines.tab',format="set", set=model.HydrogenBidirectionalLink)
 
 
     print("Constructing sub sets...")
@@ -162,8 +164,9 @@ def run_empire(name, tab_file_path, data_handler_path, result_file_path, branch_
     def BidirectionalArc_init(model):
         retval = []
         for (i,j) in model.DirectionalLink:
-            if i != j and (not (j,i) in retval):
-                retval.append((i,j))
+            if (not (i == 'Ireland' and j == 'Spain')) or (not (j == 'Ireland' and i == 'Spain')):
+                if i != j and (not (j,i) in retval):
+                    retval.append((i,j))
         return retval
     model.BidirectionalArc = Set(dimen=2, initialize=BidirectionalArc_init, ordered=True) #l
 
@@ -660,7 +663,8 @@ def run_empire(name, tab_file_path, data_handler_path, result_file_path, branch_
     def HydrogenLinks_init(model):
         retval= []
         for (n1,n2) in model.DirectionalLink:
-            retval.append((n1,n2))
+            if (n1,n2) in model.HydrogenBidirectionalLink or (n2,n1) in model.HydrogenBidirectionalLink:
+                retval.append((n1,n2))
         return retval
     model.AllowedHydrogenLinks = Set(dimen=2, initialize=HydrogenLinks_init, ordered=True)
     # model.AllowedHydrogenLinks = Set(dimen=2, within=model.Node * model.Node, ordered=True) # Depcreated; The links are now instead defined by the transmission links, but only between the production nodes
@@ -669,7 +673,8 @@ def run_empire(name, tab_file_path, data_handler_path, result_file_path, branch_
     def HydrogenBidirectionPipelines_init(model):
         retval = []
         for (n1,n2) in model.BidirectionalArc:
-            retval.append((n1,n2))
+            if (n1,n2) in model.HydrogenBidirectionalLink:
+                retval.append((n1,n2))
         return retval
     model.HydrogenBidirectionPipelines = Set(dimen=2, initialize=HydrogenBidirectionPipelines_init, ordered=True)
 

@@ -65,6 +65,8 @@ def generate_tab_files(filepath, tab_file_path, HEATMODULE=True, hydrogen=False,
     read_file(filepath, 'Sets.xlsx', 'GeneratorsOfTechnology', [0, 1], tab_file_path = tab_file_path)
     read_file(filepath, 'Sets.xlsx', 'DirectionalLines', [0, 1], tab_file_path = tab_file_path)
     read_file(filepath, 'Sets.xlsx', 'LineTypeOfDirectionalLines', [0, 1, 2], tab_file_path = tab_file_path)
+    read_file(filepath, 'Sets.xlsx', 'HydrogenLines', [0, 1], tab_file_path = tab_file_path)
+    
     # GD: New for industry + natural gas module
     # read_sets(filepath, 'Sets.xlsx', 'NaturalGasTerminals', tab_file_path = tab_file_path)
     # read_file(filepath, 'Sets.xlsx', 'NaturalGasTerminalsOfNode', [0, 1], tab_file_path = tab_file_path)

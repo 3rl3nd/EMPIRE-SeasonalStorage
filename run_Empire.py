@@ -22,10 +22,9 @@ NoOfPeriods = 8
 
         #[spring, summer, fall, peak1, winter, peak2]
 
-H2LoadScale = 0.5
-
+H2LoadScale = 1
 #initial_branches = 1
-name = f'constant_demand_no_seasonal'
+name = f'constant_demand'
 weekHours = 24*7*2
 weeksPerMonth = 1
 MaxChargeAndDischargePercentage = 0.05
